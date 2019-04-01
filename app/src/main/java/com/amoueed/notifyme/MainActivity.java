@@ -16,16 +16,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
+/**
+ * MainActivity for the Notify Me! app. Contains three buttons that deliver,
+ * update, and cancel notification.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button button_notify;
-    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
+    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel"; // Notification channel ID.
     private NotificationManager mNotifyManager;
-    private static final int NOTIFICATION_ID = 0;
+    private static final int NOTIFICATION_ID = 0; // Notification ID.
     private Button button_cancel;
     private Button button_update;
-
-    private static final String ACTION_UPDATE_NOTIFICATION = "com.example.android.notifyme.ACTION_UPDATE_NOTIFICATION";
+    private static final String ACTION_UPDATE_NOTIFICATION = "com.example.android.notifyme.ACTION_UPDATE_NOTIFICATION"; // Constants for the notification actions buttons.
     private NotificationReceiver mReceiver = new NotificationReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +62,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Create the notification channel.
         createNotificationChannel();
 
+        // Reset the button states. Enable only Notify button and disable
+        // update and cancel buttons.
         setNotificationButtonState(true, false, false);
 
+        // Register the broadcast receiver to receive the update action from the notification.
         registerReceiver(mReceiver,new IntentFilter(ACTION_UPDATE_NOTIFICATION));
     }
 
+    /**
+     * Creates a Notification channel, for OREO and higher.
+     */
     public void createNotificationChannel() {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -149,6 +160,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Unregisters the receiver when the app is being destroyed.
+     */
     @Override
     protected void onDestroy() {
         unregisterReceiver(mReceiver);
